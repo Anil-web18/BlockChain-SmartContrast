@@ -1,0 +1,11 @@
+trackingId,product,quantity,value,status,origin,destination,carrier,createdAt,temperature,humidity
+SC001,Electronics - Smartphones,100,2.5,Delivered,Shanghai China,New York USA,DHL Express,2024-01-15,22,45
+SC002,Medical Supplies - Vaccines,500,5.0,In Transit,Mumbai India,London UK,FedEx,2024-01-20,-20,30
+SC003,Food Products - Organic Coffee,200,1.8,Created,São Paulo Brazil,Berlin Germany,UPS,2024-01-22,18,60
+SC004,Automotive Parts,75,3.2,Delivered,Detroit USA,Tokyo Japan,DHL,2024-01-10,25,40
+SC005,Textiles - Cotton,300,1.5,In Transit,Dhaka Bangladesh,Paris France,FedEx,2024-01-18,20,55
+SC006,Pharmaceuticals,150,8.7,Delivered,Basel Switzerland,Toronto Canada,UPS,2024-01-12,-5,35
+SC007,Electronics - Laptops,50,15.2,Created,Shenzhen China,Berlin Germany,DHL,2024-01-25,23,42
+SC008,Food Products - Spices,400,2.1,In Transit,Kerala India,New York USA,FedEx,2024-01-19,15,65
+SC009,Medical Equipment,25,12.5,Delivered,Munich Germany,Sydney Australia,UPS,2024-01-08,22,38
+SC010,Chemicals,80,6.3,Created,Houston USA,Rotterdam Netherlands,DHL,2024-01-24,18,45
