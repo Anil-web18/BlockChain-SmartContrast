@@ -9,6 +9,7 @@ import ShoppingCart from './ShoppingCart';
 import Checkout from './Checkout';
 import OrderConfirmation from './OrderConfirmation';
 import CustomerSupport from './CustomerSupport';
+import AIRecommendations from './AIRecommendations';
 
 const ConsumerPortal = ({ transactions }) => {
   const [activeTab, setActiveTab] = useState('scanner');
@@ -124,14 +125,13 @@ const ConsumerPortal = ({ transactions }) => {
       }}>
         {[
           { id: 'scanner', label: '📱 Scan Product', icon: '📱' },
+          { id: 'ai-recommendations', label: '🤖 AI Picks', icon: '🤖' },
           { id: 'store', label: '🛍️ Shop Products', icon: '🛍️' },
           { id: 'cart', label: '🛒 Cart', icon: '🛒', badge: cartItems.length },
-          { id: 'journey', label: '🗺️ Product Journey', icon: '🗺️' },
-          { id: 'verify', label: '✅ Verify Authenticity', icon: '✅' },
           { id: 'reviews', label: '⭐ Reviews & Ratings', icon: '⭐' },
           { id: 'companies', label: '🏢 Companies', icon: '🏢' },
           { id: 'support', label: '💬 Support', icon: '💬' }
-        ].map(tab => (
+        ].map((tab, index) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
@@ -155,7 +155,20 @@ const ConsumerPortal = ({ transactions }) => {
               boxShadow: activeTab === tab.id 
                 ? '0 8px 25px rgba(0,0,0,0.15)' 
                 : '0 4px 15px rgba(0,0,0,0.1)',
-              transform: activeTab === tab.id ? 'translateY(-2px)' : 'translateY(0)'
+              transform: activeTab === tab.id ? 'translateY(-2px) scale(1.05)' : 'translateY(0) scale(1)',
+              animation: tab.id === 'ai-recommendations' ? 'glow 2s ease-in-out infinite alternate' : 'none'
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== tab.id) {
+                e.target.style.transform = 'translateY(-3px) scale(1.02)';
+                e.target.style.background = 'rgba(255,255,255,0.25)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== tab.id) {
+                e.target.style.transform = 'translateY(0) scale(1)';
+                e.target.style.background = 'rgba(255,255,255,0.15)';
+              }
             }}
           >
             {tab.icon} {tab.label}
@@ -184,6 +197,23 @@ const ConsumerPortal = ({ transactions }) => {
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {activeTab === 'scanner' && (
           <ProductScanner onProductScanned={handleProductScanned} transactions={transactions} />
+        )}
+        {activeTab === 'ai-recommendations' && (
+          <AIRecommendations 
+            onAddToCart={(product) => {
+              const existingItem = cartItems.find(item => item.id === product.id);
+              if (existingItem) {
+                setCartItems(cartItems.map(item => 
+                  item.id === product.id 
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+                ));
+              } else {
+                setCartItems([...cartItems, { ...product, quantity: 1 }]);
+              }
+            }}
+            cartItems={cartItems}
+          />
         )}
         {activeTab === 'store' && (
           <ProductStore 
@@ -242,12 +272,7 @@ const ConsumerPortal = ({ transactions }) => {
             />
           )
         )}
-        {activeTab === 'journey' && (
-          <ProductJourney product={scannedProduct} />
-        )}
-        {activeTab === 'verify' && (
-          <ProductVerification product={scannedProduct} />
-        )}
+
         {activeTab === 'reviews' && (
           <ConsumerReviews product={scannedProduct} />
         )}
@@ -318,6 +343,18 @@ const ConsumerPortal = ({ transactions }) => {
           0% { transform: scale(1); }
           50% { transform: scale(1.05); }
           100% { transform: scale(1); }
+        }
+        @keyframes glow {
+          0% { box-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 0 20px rgba(255,215,0,0.3); }
+          100% { box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 30px rgba(255,215,0,0.6); }
+        }
+        @keyframes slideIn {
+          0% { transform: translateX(-100%); opacity: 0; }
+          100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+          0% { transform: translateY(30px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
     </div>

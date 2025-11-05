@@ -21,6 +21,16 @@ import ShipmentTracker from './features/ShipmentTracker';
 import BlockchainTransaction from './blockchain/BlockchainTransaction';
 import BlockchainPortal from './blockchain/BlockchainPortal';
 import SimpleBusinessDashboard from './business/SimpleBusinessDashboard';
+import RouteOptimization from './logistics/RouteOptimization';
+import IoTSensorDashboard from './iot/IoTSensorDashboard';
+import CarbonFootprintTracker from './sustainability/CarbonFootprintTracker';
+import RiskMonitor from './risk/RiskMonitor';
+import VoiceAssistant from './voice/VoiceAssistant';
+import ARProductViewer from './ar/ARProductViewer';
+import BlockchainExplorer from './blockchain-explorer/BlockchainExplorer';
+import PredictiveAnalytics from './ai/PredictiveAnalytics';
+import AdvancedAnalytics from './analytics/AdvancedAnalytics';
+import PWAInstaller from './pwa/PWAInstaller';
 import ModernCard from './ui/ModernCard';
 import ModernButton from './ui/ModernButton';
 import NotificationCenter from './ui/NotificationCenter';
@@ -28,6 +38,7 @@ import AdvancedMetrics from './ui/AdvancedMetrics';
 
 const ModernUnifiedPortal = ({ user, transactions, trackingResult, onLogout, setDarkMode, darkMode }) => {
   const [activeView, setActiveView] = useState('business');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [currentTrackingResult, setTrackingResult] = useState(trackingResult);
   const [showBlockchainPortal, setShowBlockchainPortal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -190,198 +201,75 @@ const ModernUnifiedPortal = ({ user, transactions, trackingResult, onLogout, set
 
       {/* Main Content */}
       <main className="relative z-10 p-6">
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <ModernCard variant="glass" className="mb-8 p-12 text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.8, type: "spring" }}
-              className="mb-6"
-            >
-              <GlobeAltIcon className="w-24 h-24 text-blue-400 mx-auto mb-4" />
-            </motion.div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4"
-            >
-              Blockchain Supply Chain Management
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-              className="text-xl text-gray-300 max-w-3xl mx-auto"
-            >
-              Track and manage supply chain transactions with real-time data and blockchain verification for complete transparency.
-            </motion.p>
-          </ModernCard>
-        </motion.div>
 
-        {/* Enhanced Stats Grid with Performance Metrics */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8"
-        >
+
+        {/* Tab Navigation */}
+        <div className="flex gap-2 mb-6 overflow-x-auto">
           {[
-            { icon: ChartBarIcon, value: dashboardStats.total, label: 'Total Transactions', color: 'from-blue-500 to-purple-500', trend: '+12%' },
-            { icon: CheckCircleIcon, value: dashboardStats.delivered, label: 'Delivered', color: 'from-green-500 to-emerald-500', trend: '+8%' },
-            { icon: TruckIcon, value: dashboardStats.shipped, label: 'Shipped', color: 'from-blue-500 to-cyan-500', trend: '+15%' },
-            { icon: ClockIcon, value: dashboardStats.pending, label: 'Pending', color: 'from-orange-500 to-red-500', trend: '-5%' },
-            { icon: GlobeAltIcon, value: `$${(dashboardStats.totalValue/1000).toFixed(1)}K`, label: 'Total Value', color: 'from-purple-500 to-pink-500', trend: '+22%' }
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 + index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -5 }}
+            { id: 'dashboard', label: '📊 Dashboard', icon: ChartBarIcon },
+            { id: 'logistics', label: '🚛 Logistics', icon: TruckIcon },
+            { id: 'monitoring', label: '📡 Monitoring', icon: CloudIcon },
+            { id: 'innovation', label: '🚀 Innovation', icon: CubeTransparentIcon }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+                activeTab === tab.id 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
             >
-              <ModernCard 
-                variant="glass" 
-                className={`p-6 text-center hover-lift bg-gradient-to-br ${stat.color} text-white relative overflow-hidden`}
-              >
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 1 + index * 0.1, type: "spring" }}
-                >
-                  <stat.icon className="w-8 h-8 mx-auto mb-3" />
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.2 + index * 0.1 }}
-                    className="text-3xl font-bold mb-2"
-                  >
-                    {stat.value}
-                  </motion.div>
-                  <div className="text-sm opacity-90 mb-2">{stat.label}</div>
-                  <div className={`text-xs font-semibold ${stat.trend.startsWith('+') ? 'text-green-200' : 'text-red-200'}`}>
-                    {stat.trend} vs last month
-                  </div>
-                </motion.div>
-                <div className="absolute top-2 right-2 w-2 h-2 bg-white/30 rounded-full animate-pulse" />
-              </ModernCard>
-            </motion.div>
+              {tab.label}
+            </button>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Advanced Metrics Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="mb-8"
-        >
-          <AdvancedMetrics transactions={transactions} />
-        </motion.div>
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeTab === 'dashboard' && (
+              <div className="space-y-4">
+                <SimpleBusinessDashboard />
+                <div className="grid grid-cols-3 gap-4">
+                  <ShipmentTracker transactions={transactions} onTrackingResult={setTrackingResult} />
+                  <SmartContract transaction={currentTrackingResult} />
+                  <WalletManager user={user} />
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'logistics' && (
+              <div className="space-y-4">
+                <RouteOptimization />
+                <CarbonFootprintTracker />
+              </div>
+            )}
+            
+            {activeTab === 'monitoring' && (
+              <div className="space-y-4">
+                <IoTSensorDashboard />
+                <RiskMonitor />
+              </div>
+            )}
+            
+            {activeTab === 'innovation' && (
+              <div className="space-y-4">
+                <VoiceAssistant />
+                <ARProductViewer />
+                <BlockchainExplorer />
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Order Management Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4 }}
-          className="mb-8"
-        >
-          <SimpleBusinessDashboard />
-        </motion.div>
 
-        {/* Features Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6 }}
-          className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"
-        >
-          <ModernCard variant="glass" className="p-6">
-            <ShipmentTracker transactions={transactions} onTrackingResult={setTrackingResult} />
-          </ModernCard>
-
-          {currentTrackingResult && (
-            <ModernCard variant="glass" className="p-6">
-              <RealTimeTracker transaction={currentTrackingResult} />
-            </ModernCard>
-          )}
-          
-          <ModernCard variant="glass" className="p-6">
-            <SmartContract transaction={currentTrackingResult} />
-          </ModernCard>
-          
-          <ModernCard variant="glass" className="p-6">
-            <WalletManager user={user} />
-          </ModernCard>
-          
-          <ModernCard variant="glass" className="p-6">
-            <BlockchainTransaction user={user} />
-          </ModernCard>
-
-          <ModernCard variant="glass" className="p-6">
-            <h3 className="flex items-center gap-2 mb-4 text-white font-semibold">
-              <CloudIcon className="w-5 h-5" />
-              System Performance
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Load Time</span>
-                <span className="text-lg font-bold text-blue-400">{performanceMetrics.loadTime}ms</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">TX/sec</span>
-                <span className="text-lg font-bold text-green-400">{performanceMetrics.transactionSpeed}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">System Health</span>
-                <span className="text-lg font-bold text-emerald-400">{performanceMetrics.systemHealth}%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Environment</span>
-                <span className="text-sm text-blue-300">{dashboardStats.avgTemp}°C • {dashboardStats.avgHumidity}%</span>
-              </div>
-            </div>
-          </ModernCard>
-        </motion.div>
-
-        {/* Professional Footer */}
-        <motion.footer
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          className="relative z-10 mt-12 p-6"
-        >
-          <ModernCard variant="glass" className="p-6 text-center">
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span>Blockchain Network: Active</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-                <span>Real-time Tracking: Enabled</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                <span>Smart Contracts: Deployed</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-                <span>AI Analytics: Processing</span>
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <p className="text-xs text-gray-500">
-                © 2024 Oil & Gas Supply Chain Management System • Powered by Blockchain Technology
-              </p>
-            </div>
-          </ModernCard>
-        </motion.footer>
       </main>
     </div>
   );
