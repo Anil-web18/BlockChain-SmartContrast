@@ -162,6 +162,16 @@ function App() {
     totalAmount: transactions.reduce((sum, t) => sum + (t.orderAmount || 0), 0)
   };
 
+  // Handle new orders from consumer
+  const handleNewOrder = (newTransaction) => {
+    console.log('Received new order in App.js:', newTransaction);
+    setTransactions(prev => {
+      const updated = [...prev, newTransaction];
+      console.log('Updated transactions:', updated.length);
+      return updated;
+    });
+  };
+
   // Unified Portal (handles both business and consumer views)
   if (user) {
     return (
@@ -173,6 +183,7 @@ function App() {
           onLogout={handleLogout}
           setDarkMode={setDarkMode}
           darkMode={darkMode}
+          onNewOrder={handleNewOrder}
         />
       </ErrorBoundary>
     );

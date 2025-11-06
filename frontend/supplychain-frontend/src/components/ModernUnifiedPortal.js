@@ -36,7 +36,8 @@ import ModernButton from './ui/ModernButton';
 import NotificationCenter from './ui/NotificationCenter';
 import AdvancedMetrics from './ui/AdvancedMetrics';
 
-const ModernUnifiedPortal = ({ user, transactions, trackingResult, onLogout, setDarkMode, darkMode }) => {
+const ModernUnifiedPortal = ({ user, transactions, trackingResult, onLogout, setDarkMode, darkMode, onNewOrder }) => {
+  console.log('ModernUnifiedPortal - onNewOrder prop:', typeof onNewOrder);
   const [activeView, setActiveView] = useState('business');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [currentTrackingResult, setTrackingResult] = useState(trackingResult);
@@ -236,6 +237,21 @@ const ModernUnifiedPortal = ({ user, transactions, trackingResult, onLogout, set
           >
             {activeTab === 'dashboard' && (
               <div className="space-y-4">
+                <div className="bg-white/10 p-4 rounded-lg mb-4">
+                  <h3 className="text-white text-lg font-bold">📦 Recent Orders ({transactions.length} total)</h3>
+                  <div className="grid grid-cols-1 gap-2 mt-2">
+                    {transactions.slice(-5).reverse().map(t => (
+                      <div key={t.transactionId} className="flex justify-between text-sm">
+                        <span className="text-blue-300">{t.transactionId}</span>
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          t.orderStatus === 'Delivered' ? 'bg-green-500/20 text-green-300' :
+                          t.orderStatus === 'Shipped' ? 'bg-blue-500/20 text-blue-300' :
+                          'bg-yellow-500/20 text-yellow-300'
+                        }`}>{t.orderStatus}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <SimpleBusinessDashboard />
                 <div className="grid grid-cols-3 gap-4">
                   <ShipmentTracker transactions={transactions} onTrackingResult={setTrackingResult} />
@@ -323,7 +339,7 @@ const ModernUnifiedPortal = ({ user, transactions, trackingResult, onLogout, set
               >
                 🏢 Back to Business
               </motion.button>
-              <ConsumerPortal transactions={transactions} />
+              <ConsumerPortal transactions={transactions} onNewOrder={onNewOrder} />
             </div>
           )}
         </motion.div>

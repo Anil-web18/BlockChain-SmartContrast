@@ -42,10 +42,12 @@ const ProductStore = ({ onAddToCart, cartItems = [] }) => {
   };
 
   const handleAddToCart = (product) => {
+    console.log('Button clicked for product:', product.name);
     if (!product.inStock) {
       toast.error('Product is out of stock');
       return;
     }
+    console.log('Calling onAddToCart with:', product);
     onAddToCart(product);
     toast.success(`${product.name} added to cart!`);
   };
@@ -55,6 +57,10 @@ const ProductStore = ({ onAddToCart, cartItems = [] }) => {
     return item ? item.quantity : 0;
   };
 
+  console.log('ProductStore rendering, products:', oilGasProducts.length);
+  console.log('onAddToCart function:', typeof onAddToCart);
+  console.log('cartItems:', cartItems);
+  
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center justify-between mb-6">
@@ -62,6 +68,23 @@ const ProductStore = ({ onAddToCart, cartItems = [] }) => {
         <div className="text-sm text-gray-500">
           {filteredProducts.length} products available
         </div>
+        <button 
+          onClick={() => {
+            // Test direct order placement
+            const testOrder = {
+              orderId: `TEST-${Date.now()}`,
+              items: [{ id: 1, name: 'Test Product', price: 100, quantity: 1 }],
+              customer: { firstName: 'Test', lastName: 'User', email: 'test@test.com', city: 'Test City', zipCode: '12345' },
+              total: 100,
+              orderDate: new Date().toISOString()
+            };
+            onAddToCart && onAddToCart({ id: 999, name: 'Test Product', price: 100 });
+            alert('Test order created - check console and business portal!');
+          }} 
+          className="bg-green-500 text-white px-4 py-2 rounded ml-2"
+        >
+          TEST ORDER
+        </button>
       </div>
 
       {/* Search and Filters */}
